@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			html,body{
+				font-size: 20px;
+				margin: 0;
+				padding: 0;
+			}
+			.chessboard{
+				margin: 1rem;
+				width: 30rem;
+				height: 30rem;
+				background:url(img/chessboard.png) no-repeat ;
+				box-shadow: 2px 2px 8px #888;
+			}
+			.chessboard div{
+				width:40px;
+				width: 2rem;
+				height: 40px;
+				height: 2rem;
+				margin: 0;
+				padding: 0;
+				float: left;
+			}
+			.chessboard-left-top:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:0px 0px ;	
+			}
+			.chessboard-top:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:-40px 0px ;	
+			}
+			.chessboard-right-top:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:-80px 0px ;	
+			}
+			.chessboard-left:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:0px -40px ;	
+			}
+			.chessboard-middle:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:-40px -40px ;	
+			}
+			.chessboard-right:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:-80px -40px ;	
+			}
+			.chessboard-left-bottom:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:0px -80px ;	
+			}
+			.chessboard-bottom:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:-40px -80px ;	
+			}
+			.chessboard-right-bottom:hover{
+				background: url(img/fivechess.png) no-repeat;
+				background-position:-80px -80px ;	
+			}
+		</style>
+	</head>
+	<body>
+		<div class="chessboard" id="chess_board">
+			<!--第一行-->
+			<div class="chessboard-left-top " ></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-top"></div>
+			<div class="chessboard-right-top"></div>
+			<!--第二行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第3行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第4行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第5行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第6行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第7行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第8行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第9行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第10行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第11行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第12行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第13行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第14行-->
+			<div class="chessboard-left"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-middle"></div>
+			<div class="chessboard-right"></div>
+			<!--第15行-->
+			<div class="chessboard-left-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-bottom"></div>
+			<div class="chessboard-right-bottom"></div>
+			
+		</div>
+	</body>
+	<script type="text/javascript">
+		clear();
+		init();
+		function Player (name) {
+			this.name=name,
+			this.chessnum=0;
+		}
+		function clear() {
+			var chessboard=document.getElementById("chess_board");
+			var chesscell=chessboard.getElementsByTagName("div");
+			for (var i=0;i<chesscell.length;i++) {
+				chesscell[i].dataset.color="";
+				chesscell[i].style.background="";
+			}
+		}
+		function init () {
+			var chessboard=document.getElementById("chess_board");
+			var chesscell=chessboard.getElementsByTagName("div");
+			var blackMan=new Player("black");
+			var whiteMan=new Player("white");
+			var playerstatus="black";
+			var matrix=[];//棋盘矩阵
+			//将棋盘中每一个受体div存入矩阵当中
+			function toMatrix() {
+				var count=0;
+				for (var i=0;i<15;i++) {
+					matrix[i]=[]	;
+					for (var j=0;j<15;j++) {
+						matrix[i][j]=chesscell[count];
+						count=count+1;
+					}
+				}
+			}
+			toMatrix();
+			chessboard.addEventListener("click",function (e) {
+					e.target=e.target||e.srcElement;
+					if (e.target.nodeName!="DIV"||e.target.dataset.color!="") {
+						alert("请选择有效位置");
+						return;	
+					}
+					if (playerstatus=="black") {
+//						console.log(e.target.style.backgroundColor);
+						e.target.style.background="url(img/fivechess.png) no-repeat ";
+						e.target.style.backgroundPosition="-120px 0px ";
+						e.target.dataset.color="black";
+						blackMan.chessnum++;
+//						console.log(around(e.target));//调试用
+//						clear();
+						rule(e.target,"black");
+						playerstatus="white";
+					} else{
+						e.target.style.background="url(img/fivechess.png) no-repeat ";
+						e.target.style.backgroundPosition="-160px 0px ";
+						e.target.dataset.color="white";
+						whiteMan.chessnum++;
+//						console.log(around(e.target));//调试用
+						rule(e.target,"white");
+						playerstatus="black";
+					}	
+			});
+			//获得当前div坐标，并return
+			function getCoordinate(target){
+				var mindex=[];
+				for (var i=0;i<matrix.length;i++) {
+					for (var j=0;j<matrix[i].length;j++) {
+						if (matrix[i][j]==target) {
+							mindex=[i,j];
+							return mindex;
+						} 
+					}
+				}
+			}
+			//查找周围有效的div,在返回数组中存放对象和方向，第一位是对象，第二个是方向。在数组中返回8/3/5个div对象
+			function around(target) {
+				var mindex=getCoordinate(target);
+//				console.log(mindex);//调试用
+				var x=mindex[0];
+				var y=mindex[1];
+				var count=0;
+				var dir=0;//方向
+				var divs=[];//存放周围有效的div
+				divs[0]=[];//存放对象
+				divs[1]=[];//存放方向
+				for (var i=-1;i<2;i++) {
+					for(var j=-1;j<2;j++){
+						if((i!=0||j!=0)&&(x+i>-1&&x+i<15&&y+j>-1&&y+j<15)){//排除目标div在边角的情况
+							divs[0][count]=matrix[x+i][y+j];
+							divs[1][count]=dir;
+							count++;
+						}
+						dir++;
+					}
+				}
+//				console.log(divs);//调试用
+				return divs;
+			}
+			//获得指定方向(原点第二圈开始往外)上有多少个目标div，这一层已经有两个有效连接了
+			function dirDiv (target,dir,color) {
+				var mindex=getCoordinate(target);
+				var x=mindex[0];
+				var y=mindex[1];
+				var nxny=[[-1,-1],[-1,0],[-1,1],[0,-1],,[0,1],[1,-1],[1,0],[1,1]];//不同方向的相对坐标
+				var nx=nxny[dir][0],ny=nxny[dir][1];
+				var num=0;
+				function check() {
+					var div;
+					x=x+nx;
+					y=y+ny;
+//					console.log(x,y);//调试用
+					if (x<0||x>14>>y<0||y>14) {//边界条件
+						div=undefined;
+					}else{
+					div=matrix[x][y];//获得指定方向对象	
+					}
+//					console.log(div);//调试用
+					if (div!=undefined&&checkColor(div,color)) {
+						num++;
+						check();	
+					}	
+				}
+				check();
+				return num;
+			}
+			//判断多个目标div是什么颜色
+//			function checkColors (targets,index,color) {
+//				console.log(target);
+//				var isColor=[];
+//				var count=0;
+////				target.style.cssText="";
+//				for (var i=0;i<targets.length;i++) {
+//					if(targets[i].dataset.color==color){
+//						isColor[count]=index[i];
+//					}
+//				}
+//				return isColor;
+//			}
+			//判断一个div颜色
+			function checkColor (target,color) {
+				if(target.dataset.color==color){
+						return true;
+					}
+				else{
+					return false;
+				}
+			}
+			//判断是否获胜
+			function rule (target,color) {
+				var divsdir=[];
+				var divs=[];
+				var dir=[];
+				var nextChess=[];
+				var chessNum=1;
+				var chessDirNum=[];
+				var count=0;
+				var anum=0;
+				var bnum=0;
+				divsdir=around(target);//获得周围div对象和方向存入数组
+				divs=divsdir[0];//获得周围div对象并存入数组
+				dir=divsdir[1];//获得周围div方向存入数组，必须要存，防止边角状态
+				for (var i=0;i<9;i++) {
+					chessDirNum[i]=[];
+					chessDirNum[i][0]=i;//存储方向
+					chessDirNum[i][1]=0;//存储目标数量
+					if (dir[count]==i) {
+						if (checkColor(divs[count],color)) {
+							nextChess[anum]=[];
+							nextChess[anum][0]=divs[count];//存储div
+							nextChess[anum][1]=dir[count];//存储方向
+							chessDirNum[i][1]=1;//存储目标数量
+							anum++;
+						}
+						count++;
+					}
+				}
+//				console.log(nextChess);
+				for (var i=0;i<nextChess.length;i++) {
+					bnum=nextChess[i][1];
+					chessDirNum[bnum][1]+=dirDiv(nextChess[i][0],nextChess[i][1],color);
+//					console.log(chessDirNum[bnum][1],chessDirNum[8-bnum][1]);//调试，查看两个方向的有效数目
+						if (chessDirNum[bnum][1]+chessDirNum[8-bnum][1]>3) {
+							alert(color+" win!");
+							clear();
+							return chessDirNum[bnum][1]+chessDirNum[8-bnum][1];
+						} 
+				}
+					
+			}
+		}
+	</script>
+</html>
