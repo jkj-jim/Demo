@@ -551,9 +551,10 @@
 				var count=-1;
 				divs=canAroundChess(target,"");//周围所有空位点
 				for(var i=0;i<divs.length;i++){
+					console.log(div,counts,count);
 					if (divs[i]!=undefined) {
 						levels[i]=level(divs[i],uncolor);//周围空位点对应的权重
-//						console.log(divs[i],levels[i]);
+						console.log(divs[i],levels[i]);
 						if (levels[i][0]>3) {
 							div=divs[i];
 							return div;
@@ -562,21 +563,23 @@
 							counts=levels[i][0];//得出单列权重最大的点位
 							count=levels[i][1];
 							div=divs[i];
-						}else if(counts=levels[i][0]){//	如果单列权重相等
+						}else if(counts==levels[i][0]){//	如果单列权重相等
 							if (count<levels[i][1]) {
 								count=levels[i][1];//得出周围整体权重最大的点位
+								
 								div=divs[i];
 							}
 						}
 					}
 				}
+				console.log(div);
 				divs=[];
 				levels=[];
 				divs=linesDirTarget(target,uncolor);
 				if (divs.length>0) {
 					for (var i=0;i<divs.length;i++) {
 						levels[i]=level(divs[i],uncolor);//支线点位对应的权重
-//						console.log(divs[i],levels[i]);
+						console.log(divs[i],levels[i]);
 						if (levels[i][0]>3) {
 							div=divs[i];
 							return div;
@@ -585,7 +588,7 @@
 							counts=levels[i][0];//得出单列权重最大的点位
 							count=levels[i][1];
 							div=divs[i];
-						}else if(counts=levels[i][0]){//	如果单列权重相等
+						}else if(counts==levels[i][0]){//	如果单列权重相等
 							if (count<levels[i][1]) {
 								count=levels[i][1];//得出周围整体权重最大的点位
 								div=divs[i];
@@ -602,7 +605,6 @@
 				var div;
 				var uncolor=(color=="white")?"black":"white";
 				div=protectP(ptarget,uncolor);
-//				console.log(div);
 				downChess(div,color);
 				rule(div,color);
 			}
