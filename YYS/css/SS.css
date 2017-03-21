@@ -1,0 +1,136 @@
+.SS{
+	background-image: url(../img/strategy_bg_0c2f70e.jpg);
+	background-repeat: no-repeat;
+	background-position: center top;
+	width: 100%;
+	height: 500px;
+	position: relative;
+}
+.SS_container{
+	width: 1200px;
+	height: 304px;
+	/*background-color: #F5F5DC;*/
+	position: relative;
+	/*left: 400px;*/
+	margin: auto;
+	top: 100px;
+}
+.SS_topbar{
+	width: 1200px;
+	height: 50px;
+	border-bottom: dashed 1px black;
+	margin-bottom: 33px;
+}
+.SS_topbar_tabs{
+	width: 379px;
+	height: 38px;
+	padding-top: 14px;
+	margin-left: 10px;
+	float: left;
+	/*background-color: aquamarine;*/
+}
+.SS_img{
+	width: 1210px;
+	height: 220px;
+	/*background-color: #FAEBD7;*/
+}
+.all{
+	color: #cea441;
+}
+.SS_topbar_tabs a{
+	/*display: block;*/
+	text-decoration: none;
+	margin-right: 32px;
+	/*margin-bottom: 5px;*/
+	font-weight:600;
+	font-size: 18px;
+	color: black;
+}
+.SS_item{
+	width: 89px;
+	height: 92px;
+	display: block;
+	margin-top: 10px;
+	position: relative;
+	background-image: url(../img/index_z_25d54cc.png);
+	background-repeat: no-repeat;
+	background-position: -1053px -899px;
+}
+ /*a.SS_item{
+	display: block;
+}*/
+.SS_item img{
+	width: 82px;
+	height: 82px;
+	position: absolute;
+	top: 3px;
+	left: 3px;
+}
+.SS_list ul{
+	/*width: 114px;*/
+	width: 89px;
+	height: 207px;
+	float: left;
+	margin-left: 18px;
+	margin-right: 18px;
+	padding-top: 5px;
+	padding-right: 24px;
+	border-right: 1px solid #95a7a4;
+}
+.SS_list ul li{
+	list-style: none;
+}
+.SS_item:hover .name{
+	display: block;
+}
+.SS_item:hover .name_two{
+	display: block;
+}
+.name{
+	width: 89px;
+	height: 92px;
+	/*float: left;*/
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-image: url(../img/mask_6b7d844.png);
+	border-radius: 100%;
+	display: none;
+	z-index: 10;
+	/*opacity: 0;*/
+	transition: all .3s;
+	text-align: center;
+	/*vertical-align: middle;*/
+
+}
+.name_two{
+	width: 89px;
+	height: 92px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	background-image: url(../img/mask_6b7d844.png);
+	border-radius: 100%;
+	display: none;
+	/*opacity: 0;*/
+	z-index: 10;
+	transition: all .3s;
+	text-align: center;
+	/*vertical-align: middle;*/
+}
+.SS_size{
+	width: 89px;
+	height: 92px;
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+.SS_list em{
+	font-weight: 400;
+	font-style: normal;
+	width: 19px;
+	display:block;
+	color: white;
+	margin: auto;
+	font-size: 14px;
+}

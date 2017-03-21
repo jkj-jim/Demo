@@ -1,0 +1,61 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: "microsoft yahei";
+}
+body{
+	background-color: #EFEFEF;
+}
+.TOP{
+	width: 100%;
+	height: 50px;
+
+}
+.TOP_main{
+	width: 1000px;
+	height: 50px;
+	margin: auto;
+	/*background-color: #B1B1B1;*/
+}
+.TOP_img{
+	width: 155px;
+	height: 50px;
+	float: left;
+	background-image: url(../img/111.png);
+}
+.TOP_main i{
+	width: 1px;
+	height: 26px;
+	margin: 12px 20px 0 20px;
+	background-color: #dfdfdf;
+	float: left;
+	font-style: normal;
+}
+.reg{
+	font-size: 24px;
+	font-weight: normal;
+	float: left;
+	line-height: 50px;
+}
+.reg_main{
+	width: 100%;
+	height: 666px;
+}
+.reg_middle{
+	width: 1000px;
+	height: 666px;
+	margin: auto;
+	position: relative;
+	background-color: #FFFFFF;
+}
+.loginLinks{
+	padding-top: 15px;
+	padding-bottom: 15px;
+	text-align: center;
+	color: #cecece;
+}
+.loginLinks a{
+	text-decoration: none;
+	font-size: 12px;
+	color: black;	
+}

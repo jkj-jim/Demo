@@ -1,0 +1,144 @@
+.QRcode{
+	width: 1260px;
+	height: 200px;
+	margin: auto;
+	/*background-color: antiquewhite;*/
+	padding-bottom: 78px;
+	margin-top: 78px;
+}
+.bottom_logo{
+	width: 70px;
+	height: 199px;
+	float: left;
+	margin-left: 85px;
+	margin-right: 105px;
+}
+.code_wb{
+	width: 270px;
+	height: 200px;
+	float: left;
+	background-color: #F6F6F6;
+	padding-top: 20px;
+	margin-right: 117px;
+	position: relative;
+}
+.txt_clearfix{
+	width: 240px;
+	height: 102px;
+	margin-left: 30px;
+}
+.txt_clearfix p{
+	width: 27px;
+	float: left;
+	line-height: 17px;
+}
+.code_wx{
+	width: 270px;
+	height: 200px;
+	position: relative;
+	float: left;
+	background-color: #F6F6F6;
+	padding-top: 20px;
+	margin-right: 117px;
+}
+.code{
+	width: 164px;
+	height: 164px;
+	float: right;
+	position: absolute;
+	right: -32px;
+	top: -32px;
+	background-color: white;
+	border: 1px #ccc solid;
+}
+.code img{
+	width: 132px;
+	height: 132px;
+	margin-left: 16px;
+	margin-top: 16px;
+	/*overflow: auto;*/
+}
+.wb_txt{
+	width: 24px;
+	height: 96px;
+	float: left;
+	/*margin-left: 45px;*/
+	/*margin-top: 40px;*/
+	background-image: url(../img/index_z_25d54cc.png);
+	background-position: -1244px -363px;
+}
+.wx_txt{
+	width: 24px;
+	height: 119px;
+	float: left;
+	/*margin-left: 45px;*/
+	/*margin-top: 40px;*/
+	background-image: url(../img/index_z_25d54cc.png);
+	background-position: -1233px -123px;
+}
+.line_two{
+	width: 52px;
+	height: 2px;
+	background: #d1d1d1;
+	position: absolute;
+	left: 33px;
+	bottom: 40px;
+}
+.font{
+	position: absolute;
+	bottom: 15px;
+	left: 33px;
+	color: #000;
+	font-size: 14px;
+	text-decoration: none;
+}
+.font span{
+	color: #d2c199;
+}
+.code_wb a{
+	display: block;
+}
+.server_part{
+	width: 225px;
+	height: 95px;
+	padding-top: 95px;
+	position: relative;
+	/*background-color: #F6F6F6;*/
+	float: left;
+}
+.tel_img{
+	width: 111px;
+	height: 109px;
+	position: absolute;
+	top: -32px;
+	left: 0;
+	background-image: url(../img/index_z_25d54cc.png);
+	background-position: -954px -597px;
+}
+.tel_text{
+	/*display: block;*/
+	font-size: 14px;
+	line-height: 22px;
+}
+.tel{
+	font-family: georgia;
+	line-height: 22px;
+	font-size: 20px;
+	margin-bottom: 24px;
+}
+.line_three{
+	width: 52px;
+	height: 2px;
+	background: #d1d1d1;
+	position: absolute;
+	/*left: 33px;*/
+	bottom: 10px;
+}
+.font_two{
+	position: absolute;
+	bottom: -15px;
+	/*left: 33px;*/
+	color: #d2c199;
+	font-size: 14px;
+	text-decoration: none;
+}

@@ -1,0 +1,159 @@
+*{
+	margin: 0px;
+	padding: 0px;
+	font-family: "microsoft yahei";
+}
+body{
+	background-color: #efefef;
+}
+.TOP{
+	width: 100%;
+	height: 80px;
+}
+.TOP_E{
+	width: 1000px;
+	margin: 0 auto;
+
+}
+.TOP_EE{
+	display: block;
+	margin-top: 20px;
+	/*position: relative;*/
+}
+
+.TOP_question{
+	width: 144px;
+	height: 20px;
+	float: right;
+	font-size: 18px;
+	margin-top: 18px;
+	/*display: block;*/
+}
+.TOP_question a{
+	/*float: left;*/
+	text-decoration: none;
+	color: #ca5252;
+}
+.reg_block{
+	position: relative;
+	width: 1000px;
+	margin: 0 auto;
+	background-color: #FFFFFF;
+	border-radius: 6px;
+	box-shadow: 0 3px 3px #cbc9c9;
+}
+.block_top{
+	color: rgb(202,82,82);
+	padding: 40px 0 0 70px;
+	font: 24px "microsoft yahei";
+}
+.block_main{
+	width: 1000px;
+	height: 350px;
+	margin-top: 40px;
+	/*padding-left: 297px;*/
+}
+.list_div{
+	width: 1000px;
+	height: 72px;
+}
+.text{
+	width: 340px;
+	height: 45px;
+	float: left;
+	text-align: right;
+	margin-top: 12px;
+	font-size: 16px;
+	line-height: 45px;
+}
+.err{
+	width: 240px;
+	height: 72px;
+	float: left;
+	margin-left: 10px;
+	max-height: 60px;
+	font-size: 12px;
+}
+.err_img{
+	width: 22px;
+	height: 22px;
+	float: left;
+	margin-top: -2px;
+	/*padding: 0 2px 0 0;*/
+	font-style: normal;
+	background-image: url(../img/sprite.png);
+	background-position: -62px -98px;
+}
+.err_text{
+	margin-top: 22px;
+	float: left;
+}
+.suc{
+	width: 22px;
+	height: 22px;
+	float: left;
+	margin-top: -2px;
+	background-image: url(../img/sprite.png);
+	background-position: -26px -98px;
+}
+
+
+			.AAA{
+				width: 350px;
+				height: 50px;
+				background-color: #C60A0A;
+				color: white;
+				margin-top: 20px;
+				margin-left: 340px;
+				font-size: 18px;
+			}
+			.BBB{
+				width: 350px;
+				height: 46px;
+				float: left;
+				border: solid 1px #ddd;
+				font-size: 16px;
+				margin-top: 12px;
+			}
+			.ZC{
+				/*float: left;*/
+				
+			}
+			/*.main{
+				
+			}*/
+			#yzmDiv{
+				width: 60px;
+				height: 25px;
+				text-align: center;
+				line-height: 25px;
+				background: black;
+				color: white;
+				cursor: pointer;
+			}
+			input:hover {color: black;bacgkground-color: darksalmon;}
+			input:active{color: navy;}
+			
+.bottom{
+	width: 100%;
+	height: 106px;
+}
+.bottom_main{
+	width: 1000px;
+	height: 106px;
+	margin: auto;
+	/*background-color: #95A7A4;*/
+}
+.m-cp{
+	padding:30px 0;
+}
+.m-cp p{
+	padding-bottom: 10px;
+	text-align: center;
+	color: #b1b1b1;
+	font-size: 12px;
+}
+.m-cp p a{
+	text-decoration: none;
+	color: #b1b1b1;
+}

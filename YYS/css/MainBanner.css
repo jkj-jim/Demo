@@ -1,0 +1,19 @@
+.qingming{
+	background-image: url(../img/qingmin_5e1c3bc.png);
+	background-repeat: no-repeat;
+	position: absolute;
+	left: 50%;
+	top: 40px;
+}
+.cal_red{
+	background-image: url(../img/RED.png);
+	background-repeat: no-repeat;
+	position: absolute;
+	top: 775px;                                  
+	width: 1260px;
+	height: 281px;
+	}
+.logo_animate{
+	background-image: url(../img/logo_7920691.png);
+	background-repeat: no-repeat;
+}

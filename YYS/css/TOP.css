@@ -1,0 +1,53 @@
+.TopBar{
+	width:100%;
+	/*height: 55px;*/
+	/*margin: auto;*/
+}
+.TopBar_two{
+	width: 90%;
+	height: 55px;
+	margin: auto;
+}
+.topbar-logo{
+	text-decoration: none;	
+	color:#333;
+}
+.TopBar-right{
+	width: 367px;
+	height: 55px;
+	float: right;
+	/*background-color: beige;*/
+	font-size: 8px;
+	/*position: relative;*/
+}
+.ZCCZ{
+	width: 72px;
+	height: 52px;
+	text-align: center;
+	line-height: 55px;
+	float: left;
+	cursor: pointer;
+	/*position: absolute;*/
+}
+.ZCCZ a:hover{
+	color: #bc2e2e!important;
+    border-bottom: 3px solid #bc2e2e;
+    background-color: #F3F3F3;
+    background-image: -webkit-linear-gradient(top,#F3F3F3 0,#FEFEFE 52px);
+}
+.ZCCZ a{
+	display: block;
+	width: 100%;
+	height: 100%;
+	text-decoration: none;
+	color:#333;
+}
+.TopBanner{
+	width: 151px!important;
+	float: right!important;
+	/*position: absolute;*/
+}
+#topLunbo{
+	position: relative;
+	/*transition: all 1s;*/
+}
