@@ -320,8 +320,8 @@
 	
 	</body>
 	<script type="text/javascript">
-		clear();
-		init();
+		
+		init();//初始化，复位
 		function Player (name) {
 			this.name=name;
 			this.color;
@@ -332,21 +332,49 @@
 //			function dochess (target) {
 //			}
 //		}
-		function clear() {
-			var chessboard=document.getElementById("chess_board");
-			var chesscell=chessboard.getElementsByTagName("div");
-			for (var i=0;i<chesscell.length;i++) {
-				chesscell[i].dataset.color="";
-				chesscell[i].style.background="";
-			}
-		}
+		
 		function init () {
 			var chessboard=document.getElementById("chess_board");
 			var chesscell=chessboard.getElementsByTagName("div");
-			var blackMan=new Player("black");
-			var whiteMan=new Player("white");
+			var nowChess;
+//			var blackMan=new Player("black");
+//			var whiteMan=new Player("white");
 			var playerstatus="black";
 			var matrix=[];//棋盘矩阵
+//			var AI
+			clear();
+			toMatrix();
+			chessboard.addEventListener("click",function (e) {
+					e.target=e.target||e.srcElement;
+					nowChess=e.target;
+					if (nowChess.nodeName!="DIV"||nowChess.dataset.color!="") {
+						alert("请选择有效位置");
+						return;	
+					}
+					if (playerstatus=="black") {
+						if(downChess(nowChess,playerstatus))return;
+//						blackMan.chessnum++;
+						nowChess=aiDochess(nowChess,playerstatus);
+						if(downChess(nowChess,playerstatus))return;
+					} else{
+						downChess(e.target,"white");
+//						whiteMan.chessnum++;
+						rule(e.target,"white");
+						playerstatus="black";
+					}
+					console.log("这是间隔");
+			});
+			//下面是内部函数
+			//清屏函数,改变一些状态参数
+			function clear() {
+//				var chessboard=document.getElementById("chess_board");
+//				var chesscell=chessboard.getElementsByTagName("div");
+				playerstatus="black";
+				for (var i=0;i<chesscell.length;i++) {
+					chesscell[i].dataset.color="";
+					chesscell[i].style.background="";
+				}
+			}
 			//将棋盘中每一个受体div存入矩阵当中
 			function toMatrix() {
 				var count=0;
@@ -358,26 +386,6 @@
 					}
 				}
 			}
-			toMatrix();
-			chessboard.addEventListener("click",function (e) {
-					e.target=e.target||e.srcElement;
-					if (e.target.nodeName!="DIV"||e.target.dataset.color!="") {
-						alert("请选择有效位置");
-						return;	
-					}
-					if (playerstatus=="black") {
-						downChess(e.target,"black")
-						blackMan.chessnum++;
-						rule(e.target,"black");
-						aiDochess(e.target,"white");
-					
-					} else{
-						downChess(e.target,"white");
-						whiteMan.chessnum++;
-						rule(e.target,"white");
-						playerstatus="black";
-					}
-			});
 			//获得当前div坐标，并return
 			function getCoordinate(target){
 				var mindex=[];
@@ -390,46 +398,20 @@
 					}
 				}
 			}
-			//获得周围方向上有多少个目标div
-			function dirDiv (target,color) {
-				var mindex=getCoordinate(target);
-				var x;
-				var y;
-				var nxny=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];//不同方向的相对坐标
-				var num=0;
-				var dirnum=[];
-				for (var i=0;i<8;i++) {
-					x=mindex[0];
-					y=mindex[1];
-//					console.log(i);
-					check(i);
-					dirnum[i]=num;
-					num=0;	
-				}	
-				return dirnum;
-				function check(a) {
-					var div;
-//					console.log(i);
-					x=x+nxny[a][0];
-					y=y+nxny[a][1];
-//					console.log(x,y);//调试用
-					if (x<0||x>14||y<0||y>14) {//边界条件
-						div=undefined;
-					}else{
-					div=matrix[x][y];//获得指定方向对象	
+			//判断一个div颜色
+			function checkColor (target,color) {
+				if(target.dataset.color==color){
+						return true;
 					}
-//					console.log(div);//调试用
-					if (div!=undefined&&checkColor(div,color)) {
-						num++;
-						check(a);	
-					}
+				else{
+					return false;
 				}
 			}
 			//改进的查找所有方向相同颜色连续div数目，返回一个装有所有方向有效连续div数目的矩阵
 			function dirsDivnums (target,color) {
 				var dirnum=[];
-				for (var i=0;i<8;i++) {
-					dirnum[i]=checkDir(target,i,color);
+				for (var i=0;i<4;i++) {
+					dirnum[i]=checkDir(target,i,color)+checkDir(target,7-i,color);
 				}	
 //				console.log(dirnum,target);
 				return dirnum;
@@ -438,13 +420,13 @@
 			function checkDir (target,dir,color) {
 				var div=dirTarget(target,dir);
 				var num=0;
-				if (div!=undefined&&checkColor(div,color)) {
+					if (div!=undefined&&checkColor(div,color)) {
 						num++;
 						num+=checkDir(div,dir,color);	
 					}
 				return num;
 			}
-			//查找指定方向距离为1的div，返回此div，不判断是否为有效的div
+			//查找指定方向距离为1的div，返回此div，不判断是否为有色的div
 			function dirTarget(target,dir){
 				var nxny=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];//不同方向的相对坐标,0-7的八个方向
 				var mindex=getCoordinate(target);
@@ -459,6 +441,40 @@
 					}
 				return div;
 			}
+			//落子状态改变
+			function downChess (target,color) {
+				if(color=="black"){
+					target.style.background="url(img/fivechess.png) no-repeat ";
+					target.style.backgroundPosition="-120px 0px ";
+					target.dataset.color="black";
+					playerstatus="white";
+					if(rule(target,color)) return true;
+				}else{
+					target.style.background="url(img/fivechess.png) no-repeat ";
+					target.style.backgroundPosition="-160px 0px ";
+					target.dataset.color="white";
+					playerstatus="black";
+					if(rule(target,color)) return true;
+				}
+			}
+			//判断是否获胜
+			function rule (target,color) {
+				var chessDirNum=[];
+				chessDirNum=dirsDivnums(target,color);
+//				console.log(chessDirNum,color);
+				for (var i=0;i<4;i++) {
+					if(chessDirNum[i]>3){
+						setTimeout(function () {
+							alert(color+" win!");
+							clear();
+						},10);
+						return true;
+					}
+				}
+			}
+			
+			
+			//下面为AI函数
 			//返回所有方向上终端不为指定颜色的点位，返回的为可以落子的点
 			function linesDirTarget(target,color){
 				var nxny=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];//不同方向的相对坐标,0-7的八个方向
@@ -490,15 +506,7 @@
 				}
 				return divs;//返回最多8个对象
 			}
-			//判断一个div颜色
-			function checkColor (target,color) {
-				if(target.dataset.color==color){
-						return true;
-					}
-				else{
-					return false;
-				}
-			}
+		
 			//返回目标周围1圈的所有点位（div对象），符合要求的为对象，不符合要求的为undefined，若color=""则返回周围可以落子的地方
 			function canAroundChess (target,color) {
 				var divs=[];
@@ -526,14 +534,15 @@
 				return divs;//数组中的位置代表方向，undefined的为不符合要求的
 			}
 			//4个方向为基准返回权重，第一个为单列权重最大值，第二个为所有方向权重总和
-			function level(target,color){
+			function levelson(target,color){
 				var chessDirNum=[];
 				var dirsnum=[];
 				var level=[0,0];
 				var num=0;//中间变量
-				chessDirNum=dirsDivnums(target,color);
+				chessDirNum=dirsDivnumson(target,color);
+//				console.log(chessDirNum);
 				for (var i=0;i<4;i++) {
-					dirsnum[i]=chessDirNum[i]+chessDirNum[7-i];
+					dirsnum[i]=chessDirNum[i];
 					if (num<dirsnum[i]) {
 						num=dirsnum[i];
 					}
@@ -541,21 +550,73 @@
 				}
 				level[0]=num;
 				return level;
+				//下面为内部函数
+				
+				//改进的查找所有方向相同颜色连续div数目，返回一个装有所有方向有效连续div数目的矩阵
+					function dirsDivnumson (target,color) {
+						var dirnum=[];
+						var numx=0;
+						var numy=0;
+						for (var i=0;i<4;i++) {
+							numx=checkDirson(target,i,color,1);
+							numy=checkDirson(target,7-i,color,1);
+							if ((numx%100===0)&&(numy%100===0)) {
+								if (numx+numy>300) {
+								dirnum[i]=numx+numy;
+								}else{
+								dirnum[i]=0;	
+								}
+							}else if((numx%100!==0)&&(numy%100!==0)){
+								dirnum[i]=numx+numy;
+							}else{
+								dirnum[i]=numx-numx%100+numy-numy%100;
+							}
+						}	
+						console.log(dirnum,target);
+						return dirnum;
+					}
+					//查找制定方向、颜色的连续div数目
+					function checkDirson (target,dir,color,status) {
+						var div=dirTarget(target,dir);
+						var num=0;
+						if (status==1) {
+							if (div!=undefined&&checkColor(div,color)) {
+								num=num+100;
+								num+=checkDirson(div,dir,color,1);	
+							}
+						} else if(status==2){
+							if (div!=undefined&&checkColor(div,color)) {
+								num=num+100;
+								num+=checkDir(div,dir,color,2);
+							}
+							if(div!=undefined&&div.dataset.color==""){
+								num=1;	
+							}
+						}
+						if(div!=undefined&&div.dataset.color==""){
+								num=1;
+								div=dirTarget(div,dir);
+								if (div!=undefined&&checkColor(div,color)) {
+									num=2;
+								}
+							}
+						return num;
+					}	
 			}
-			//AI防守选点
-			function protectP (target,uncolor) {
+			//AI防守，列举可下点->计算每点权重->得出选择点
+			function protectPson (target,uncolor) {
 				var divs=[];//存放所有备选目标点对象
 				var levels=[];
 				var div;
 				var counts=-1;
 				var count=-1;
-				divs=canAroundChess(target,"");//周围所有空位点
+				divs=canAroundChess(target,"");//周围域选点函数
 				for(var i=0;i<divs.length;i++){
-					console.log(div,counts,count);
+//					console.log(div,counts,count);
 					if (divs[i]!=undefined) {
-						levels[i]=level(divs[i],uncolor);//周围空位点对应的权重
+						levels[i]=levelson(divs[i],uncolor);//周围空位点对应的权重
 						console.log(divs[i],levels[i]);
-						if (levels[i][0]>3) {
+						if (levels[i][0]>350) {
 							div=divs[i];
 							return div;
 						}
@@ -572,15 +633,15 @@
 						}
 					}
 				}
-				console.log(div);
+//				console.log(div);
 				divs=[];
 				levels=[];
-				divs=linesDirTarget(target,uncolor);
+				divs=linesDirTarget(target,uncolor);//支线选点函数
 				if (divs.length>0) {
 					for (var i=0;i<divs.length;i++) {
-						levels[i]=level(divs[i],uncolor);//支线点位对应的权重
+						levels[i]=levelson(divs[i],uncolor);//支线点位对应的权重
 						console.log(divs[i],levels[i]);
-						if (levels[i][0]>3) {
+						if (levels[i][0]>350) {
 							div=divs[i];
 							return div;
 						}
@@ -604,37 +665,13 @@
 			function aiDochess(ptarget,color){
 				var div;
 				var uncolor=(color=="white")?"black":"white";
-				div=protectP(ptarget,uncolor);
-				downChess(div,color);
-				rule(div,color);
+				div=protectPson(ptarget,uncolor);
+//				downChess(div,color);
+				return div;
+//				rule(div,color);
 			}
-			//落子状态改变
-			function downChess (target,color) {
-				if(color=="black"){
-					target.style.background="url(img/fivechess.png) no-repeat ";
-					target.style.backgroundPosition="-120px 0px ";
-					target.dataset.color="black";
-//					rule(target,"black");
-					playerstatus="white";
-				}else{
-					target.style.background="url(img/fivechess.png) no-repeat ";
-					target.style.backgroundPosition="-160px 0px ";
-					target.dataset.color="white";
-//					rule(target,"white");
-					playerstatus="black";
-				}
-			}
-			//判断是否获胜
-			function rule (target,color) {
-				var chessDirNum=[];
-				chessDirNum=dirsDivnums(target,color);
-				for (var i=0;i<4;i++) {
-					if(chessDirNum[i]+chessDirNum[7-i]>3){
-						alert(color+" win!");
-						clear();
-					}
-				}
-			}
+			
+			
 		}
 	</script>
 </html>
