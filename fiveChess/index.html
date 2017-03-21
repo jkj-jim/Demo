@@ -9,6 +9,16 @@
 				margin: 0;
 				padding: 0;
 			}
+			.title {
+				/*font-family: Tahoma,Helvetica,Arial,'宋体',sans-serif;*/
+				font-family:Helvetica, 'Hiragino Sans GB', 'Microsoft Yahei', '微软雅黑', Arial, sans-serif;
+				/*font-family:"Arial","Microsoft YaHei","黑体","宋体",sans-serif;*/
+				font-size: 1.3rem;
+				height: 1rem;
+				width: 30rem;
+				margin: 5px 1rem 0px;
+				text-align: center;
+			}
 			.chessboard{
 				float: left;
 				margin: 1rem;
@@ -62,13 +72,34 @@
 				background: url(img/fivechess.png) no-repeat;
 				background-position:-80px -80px ;	
 			}
-			.qq{
+			.right{
 				float: left;
 				margin: 1rem;
+			}
+			.option button{
+				width: 6rem;
+				height: 2rem;
+				font-size: 1rem;
+				border: 1px solid black;
+				margin-right: 1rem;
+				border-radius: 0.2rem;
+				background-image: -webkit-linear-gradient(top,#F3F3F3 0,#FEFEFE 52px);
+			}
+			.chess-data div{
+				margin: 0.5rem 0px;
+				/*float: left;*/
+				/*margin: 1rem;*/
+			}
+			.qq{
+				/*float: left;*/
+				margin-top: 1rem;
 			}
 		</style>
 	</head>
 	<body>
+		<div class="title">
+			<span>五子棋</span>
+		</div>
 		<div class="chessboard" id="chess_board">
 			<!--第一行-->
 			<div class="chessboard-left-top " ></div>
@@ -312,12 +343,27 @@
 			<div class="chessboard-right-bottom"></div>
 			
 		</div>
-		
-		<div class="qq">
-			<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=616692289&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:616692289:53" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+		<div class="right">
+			<div class="option">
+				<button id="black">玩家执黑</button>
+				<button id="white">玩家执白</button>
+			</div>
+			<div class="chess-data">
+				<div class="score">
+					<p>胜/负：<span id="score_human">0</span>/<span id="score_ai">0</span></p>
+				</div>
+				<div class="step">
+					步数：<span id="step_num"></span>	
+				</div>
+				<div class="time">
+					用时：<span id="time_num"></span>	
+				</div>
+			</div>
+			<div class="qq">
+				<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=616692289&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:616692289:53" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
+			</div>
+			
 		</div>
-	
-	
 	</body>
 	<script type="text/javascript">
 		
@@ -336,40 +382,82 @@
 		function init () {
 			var chessboard=document.getElementById("chess_board");
 			var chesscell=chessboard.getElementsByTagName("div");
+			var stepnum=document.getElementById("step_num");
+			var timenum=document.getElementById("time_num");
+			var scorehuman=document.getElementById("score_human");
+			var scoreai=document.getElementById("score_ai");
+			var playerblack=document.getElementById("black");
+			var playerwhite=document.getElementById("white");
+			var playercolor="black";
+			var scorehumannum=0;
+			var scoreainum=0;
 			var nowChess;
+			var time=0;
+			var settime;
+			var step=0;
 //			var blackMan=new Player("black");
 //			var whiteMan=new Player("white");
 			var playerstatus="black";
+			var player="human";
 			var matrix=[];//棋盘矩阵
-//			var AI
+			var AImatix=[];
 			clear();
 			toMatrix();
+			settime=setInterval(function () {
+				time++;
+				if (time<10) {
+					timenum.innerHTML="00:0"+time;
+				}else if(time<60){
+					timenum.innerHTML="00:"+time;
+				}else if((time/60)<10){
+					if ((time%60)<10) {
+						timenum.innerHTML="0"+parseInt(time/60)+":0"+time%60;
+					} else{
+						timenum.innerHTML="0"+parseInt(time/60)+":"+time%60;
+					}
+				}else if((time/60)<60){
+					if ((time%60)<10) {
+						timenum.innerHTML=parseInt(time/60)+":0"+time%60;
+					} else{
+						timenum.innerHTML=parseInt(time/60)+":"+time%60;
+					}
+				}
+			},1000);
+			playerblack.onclick=function () {
+				playercolor="black";
+				clear();
+			}
+			playerwhite.onclick=function () {
+				playercolor="white";
+				clear();
+			}
 			chessboard.addEventListener("click",function (e) {
+					step++;
+					stepnum.innerHTML=step;
 					e.target=e.target||e.srcElement;
 					nowChess=e.target;
 					if (nowChess.nodeName!="DIV"||nowChess.dataset.color!="") {
 						alert("请选择有效位置");
 						return;	
 					}
-					if (playerstatus=="black") {
+					
 						if(downChess(nowChess,playerstatus))return;
 //						blackMan.chessnum++;
 						nowChess=aiDochess(nowChess,playerstatus);
 						if(downChess(nowChess,playerstatus))return;
-					} else{
-						downChess(e.target,"white");
-//						whiteMan.chessnum++;
-						rule(e.target,"white");
-						playerstatus="black";
-					}
+					
 					console.log("这是间隔");
 			});
 			//下面是内部函数
 			//清屏函数,改变一些状态参数
 			function clear() {
-//				var chessboard=document.getElementById("chess_board");
-//				var chesscell=chessboard.getElementsByTagName("div");
-				playerstatus="black";
+//				clearInterval(settime);
+				time=0;
+				timenum.innerHTML="00:00";
+				stepnum.innerHTML=0;
+				step=0;
+				AImatix=[];
+				playerstatus=playercolor;
 				for (var i=0;i<chesscell.length;i++) {
 					chesscell[i].dataset.color="";
 					chesscell[i].style.background="";
@@ -443,19 +531,21 @@
 			}
 			//落子状态改变
 			function downChess (target,color) {
+				
 				if(color=="black"){
 					target.style.background="url(img/fivechess.png) no-repeat ";
 					target.style.backgroundPosition="-120px 0px ";
 					target.dataset.color="black";
-					playerstatus="white";
 					if(rule(target,color)) return true;
+					playerstatus="white";
 				}else{
 					target.style.background="url(img/fivechess.png) no-repeat ";
 					target.style.backgroundPosition="-160px 0px ";
 					target.dataset.color="white";
-					playerstatus="black";
 					if(rule(target,color)) return true;
+					playerstatus="black";
 				}
+				
 			}
 			//判断是否获胜
 			function rule (target,color) {
@@ -468,8 +558,20 @@
 							alert(color+" win!");
 							clear();
 						},10);
+					if (player=="human") {
+						scorehumannum++;
+						scorehuman.innerHTML=scorehumannum;
+					}else{
+						scoreainum++;
+						scoreai.innerHTML=scoreainum;
+					}
 						return true;
 					}
+				}
+				if (player=="human") {
+					player="ai";
+				}else{
+					player="human";
 				}
 			}
 			
@@ -661,11 +763,16 @@
 				}
 				return div;
 			}
+			//AI进攻，列举可下点->计算每点权重->得出选择点
+			function attack() {
+				
+			}
 			//AI进行落子步骤
 			function aiDochess(ptarget,color){
 				var div;
 				var uncolor=(color=="white")?"black":"white";
 				div=protectPson(ptarget,uncolor);
+				AImatix[AImatix.length]=div;
 //				downChess(div,color);
 				return div;
 //				rule(div,color);
