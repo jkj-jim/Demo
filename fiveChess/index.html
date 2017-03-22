@@ -400,7 +400,7 @@
 			var playerstatus="black";
 			var player="human";
 			var matrix=[];//棋盘矩阵
-			var AImatix=[];
+			var AImatix=[];//ai的已落点
 			clear();
 			toMatrix();
 			settime=setInterval(function () {
@@ -638,19 +638,15 @@
 			//4个方向为基准返回权重，第一个为单列权重最大值，第二个为所有方向权重总和
 			function levelson(target,color){
 				var chessDirNum=[];
-				var dirsnum=[];
-				var level=[0,0];
-				var num=0;//中间变量
+				var level=[0,0];//第一位放权重最大值，第二位放权重总和
 				chessDirNum=dirsDivnumson(target,color);
 //				console.log(chessDirNum);
 				for (var i=0;i<4;i++) {
-					dirsnum[i]=chessDirNum[i];
-					if (num<dirsnum[i]) {
-						num=dirsnum[i];
+					if (level[0]<chessDirNum[i]) {
+						level[0]=chessDirNum[i];
 					}
-					level[1]+=dirsnum[i];
+					level[1]+=chessDirNum[i];
 				}
-				level[0]=num;
 				return level;
 				//下面为内部函数
 				
@@ -659,6 +655,7 @@
 						var dirnum=[];
 						var numx=0;
 						var numy=0;
+						var huosan=0;
 						for (var i=0;i<4;i++) {
 							numx=checkDirson(target,i,color,1);
 							numy=checkDirson(target,7-i,color,1);
@@ -669,32 +666,44 @@
 								dirnum[i]=0;	
 								}
 							}else if((numx%100!==0)&&(numy%100!==0)){
+								if (numx+numy>200) {
+									huosan++;
+									if (huosan>1) {
+										dirnum[i]=360+huosan;
+										huosan=0;
+										continue;
+									}
+								}
 								dirnum[i]=numx+numy;
+								
 							}else{
 								dirnum[i]=numx-numx%100+numy-numy%100;
 							}
 						}	
-						console.log(dirnum,target);
+//						console.log(dirnum,target);
 						return dirnum;
 					}
-					//查找制定方向、颜色的连续div数目
+					//查找制定方向、颜色的连续div数目，根据数目返回权重
 					function checkDirson (target,dir,color,status) {
 						var div=dirTarget(target,dir);
 						var num=0;
 						if (status==1) {
 							if (div!=undefined&&checkColor(div,color)) {
-								num=num+100;
+								num=num+100;//一个方向有一个相同子权重+100，继续检查这个方向上的下一个
 								num+=checkDirson(div,dir,color,1);	
 							}
-						} else if(status==2){
-							if (div!=undefined&&checkColor(div,color)) {
-								num=num+100;
-								num+=checkDir(div,dir,color,2);
-							}
-							if(div!=undefined&&div.dataset.color==""){
-								num=1;	
-							}
-						}
+						} 
+						//下面这一段是排除第一圈周围的情况，暂时用不到了
+//						else if(status==2){
+//							if (div!=undefined&&checkColor(div,color)) {
+//								num=num+100;
+//								num+=checkDir(div,dir,color,2);
+//							}
+//							if(div!=undefined&&div.dataset.color==""){
+//								num=1;	
+//							}
+//						}
+						//一个方向上终点为空则权重+1，为空且下一个为同色则+2
 						if(div!=undefined&&div.dataset.color==""){
 								num=1;
 								div=dirTarget(div,dir);
@@ -705,6 +714,34 @@
 						return num;
 					}	
 			}
+			//对对象数组的每个成员计算权重得出最高的一个，返回一个数组，0位是对象，1位是单列最大权重，2位是总权重
+			function levelmax(targets,color) {
+				var level=[0,0];
+				var divdata=[undefined,0,0];
+					for(var i=0;i<targets.length;i++){
+						if (targets[i]!=undefined) {
+							level=levelson(targets[i],uncolor);//周围空位点对应的权重
+							console.log(targets[i],level);
+							if (level[0]>350) {
+								divdata[1]=level[0];
+								divdata[2]=level[1];
+								divdata[0]=targets[i];
+								return divdata;
+							}
+							if (divdata[1]<level[0]) {
+								divdata[1]=level[0];//得出单列权重最大的点位
+								divdata[2]=level[1];
+								divdata[0]=targets[i];
+							}else if(divdata[1]==level[0]){//	如果单列权重相等
+								if (divdata[2]<level[1]) {
+									divdata[2]=level[1];//得出周围整体权重最大的点位
+									divdata[0]=targets[i];
+								}
+							}
+						}
+					}
+				return divdata;
+			}
 			//AI防守，列举可下点->计算每点权重->得出选择点
 			function protectPson (target,uncolor) {
 				var divs=[];//存放所有备选目标点对象
@@ -714,7 +751,6 @@
 				var count=-1;
 				divs=canAroundChess(target,"");//周围域选点函数
 				for(var i=0;i<divs.length;i++){
-//					console.log(div,counts,count);
 					if (divs[i]!=undefined) {
 						levels[i]=levelson(divs[i],uncolor);//周围空位点对应的权重
 						console.log(divs[i],levels[i]);
@@ -758,23 +794,84 @@
 							}
 						}
 					}
-				} else{
-					return div;
-				}
+				} 
 				return div;
 			}
+			//AI防守，列举可下点->计算每点权重->得出选择点
+			function protectPi (target,uncolor) {
+				var divs=[];//存放所有备选目标点对象
+				var level=[0,0];//存放当前对象权重
+				var divdata=[undefined,0,0];//存放最大权重对象数据
+				divs=canAroundChess(target,"");//周围域选点函数
+					for(var i=0;i<divs.length;i++){
+//					console.log(div,counts,count);
+						if (divs[i]!=undefined) {
+							level=levelson(divs[i],uncolor);//周围空位点对应的权重
+							console.log(divs[i],level);
+							if (level[0]>350) {
+								divdata[1]=level[0];
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+								return divdata;
+							}
+							if (divdata[1]<level[0]) {
+								divdata[1]=level[0];//得出单列权重最大的点位
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+							}else if(divdata[1]==level[0]){//	如果单列权重相等
+								if (divdata[2]<level[1]) {
+									divdata[2]=level[1];//得出周围整体权重最大的点位
+									divdata[0]=divs[i];
+								}
+							}
+						}
+					}
+				divs=[];
+				divs=linesDirTarget(target,uncolor);//支线选点函数
+				 for(var i=0;i<divs.length;i++){
+						if (divs[i]!=undefined) {
+							level=levelson(divs[i],uncolor);//周围空位点对应的权重
+							console.log(divs[i],level);
+							if (level[0]>350) {
+								divdata[1]=level[0];
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+								return divdata;
+							}
+							if (divdata[1]<level[0]) {
+								divdata[1]=level[0];//得出单列权重最大的点位
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+							}else if(divdata[1]==level[0]){//	如果单列权重相等
+								if (divdata[2]<level[1]) {
+									divdata[2]=level[1];//得出周围整体权重最大的点位
+									divdata[0]=divs[i];
+								}
+							}
+						}
+					}
+				 				console.log(divdata);
+				return divdata;
+			}
+			
 			//AI进攻，列举可下点->计算每点权重->得出选择点
 			function attack() {
 				
 			}
 			//AI进行落子步骤
 			function aiDochess(ptarget,color){
+				var p_data;
+				var a_data;
 				var div;
 				var uncolor=(color=="white")?"black":"white";
-				div=protectPson(ptarget,uncolor);
+				p_data=protectPi(ptarget,uncolor);
+				
+				
+				
+				
 				AImatix[AImatix.length]=div;
 //				downChess(div,color);
-				return div;
+				return p_data[0];
 //				rule(div,color);
 			}
 			
