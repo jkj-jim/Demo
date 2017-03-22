@@ -35,6 +35,7 @@
 				margin: 0;
 				padding: 0;
 				float: left;
+				cursor: pointer;
 			}
 			.chessboard-left-top:hover{
 				background: url(img/fivechess.png) no-repeat;
@@ -93,6 +94,11 @@
 			.qq{
 				/*float: left;*/
 				margin-top: 1rem;
+			}
+			.version p{
+				margin: 0;
+				padding: 0;
+				font-size: 0.7rem;
 			}
 		</style>
 	</head>
@@ -362,7 +368,19 @@
 			<div class="qq">
 				<a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=616692289&site=qq&menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:616692289:53" alt="点击这里给我发消息" title="点击这里给我发消息"/></a>
 			</div>
-			
+			<div class="version">
+				<p>v1.0完成棋盘div布局</p>
+				<p>v1.1完成规则系统</p>
+				<p>v2.1完成棋盘、棋子UI设计并嵌入网页，完成简单悬停交互设计</p>
+				<p>v2.2完成落子动作与落子效果</p>
+				<p>v2.3优化规则系统，实现PvP正常对战</p>
+				<p>v3.0优化代码，提供更为方便的函数接口</p>
+				<p>v4.0完成基础AI(选点，权重计算，权重比较，自动落子)，精简了一些代码</p>
+				<p>v5.0优化基础AI与规则系统，完成AI的防守动作</p>
+				<p>v6.0优化了防守策略，优化了一些bug</p>
+				<p>v6.1增加简单交互和数据展示与监控</p>
+				<p>v7.0加强AI防守算法，完成AI基础进攻动作</p>
+			</div>
 		</div>
 	</body>
 	<script type="text/javascript">
@@ -446,7 +464,7 @@
 						nowChess=aiDochess(nowChess,playerstatus);
 						if(downChess(nowChess,playerstatus))return;
 					
-					console.log("这是间隔");
+					console.log("这是间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔");
 			});
 			//下面是内部函数
 			//清屏函数,改变一些状态参数
@@ -807,7 +825,7 @@
 //					console.log(div,counts,count);
 						if (divs[i]!=undefined) {
 							level=levelson(divs[i],uncolor);//周围空位点对应的权重
-							console.log(divs[i],level);
+//							console.log(divs[i],level);
 							if (level[0]>350) {
 								divdata[1]=level[0];
 								divdata[2]=level[1];
@@ -831,7 +849,7 @@
 				 for(var i=0;i<divs.length;i++){
 						if (divs[i]!=undefined) {
 							level=levelson(divs[i],uncolor);//周围空位点对应的权重
-							console.log(divs[i],level);
+//							console.log(divs[i],level);
 							if (level[0]>350) {
 								divdata[1]=level[0];
 								divdata[2]=level[1];
@@ -850,13 +868,34 @@
 							}
 						}
 					}
-				 				console.log(divdata);
+//				 console.log(divdata);
 				return divdata;
 			}
 			
 			//AI进攻，列举可下点->计算每点权重->得出选择点
-			function attack() {
-				
+			function attack(targets,color) {
+			var divdata=[undefined,0,0];	
+			var 	divs=[];//周围域选点函数
+				for (var i=0;i<targets.length;i++) {
+					divs[i]=protectPi(targets[i],color);
+//					console.log(divs[i]);
+				}
+				 for(var i=0;i<divs.length;i++){
+						if (divs[i][0]!=undefined) {
+							if (divdata[1]<divs[i][1]) {
+								divdata[1]=divs[i][1]
+								divdata[0]=divs[i][0];
+								divdata[2]=divs[i][2];
+							}else if (divdata[1]==divs[i][1]) {
+								if (divdata[2]<divs[i][2]) {
+									divdata[2]=divs[i][2];//得出周围整体权重最大的点位
+									divdata[0]=divs[i][0];
+								}
+							}
+						}
+					}
+//				console.log(divdata);
+				return divdata;
 			}
 			//AI进行落子步骤
 			function aiDochess(ptarget,color){
@@ -865,13 +904,42 @@
 				var div;
 				var uncolor=(color=="white")?"black":"white";
 				p_data=protectPi(ptarget,uncolor);
+				a_data=attack(AImatix,color);
+				console.log("这是防守点");
+				console.log(p_data);
+				console.log("这是进攻点");
+				console.log(a_data);
+				if (p_data[1]>400) {
+					div=p_data[0];
+				}else if(p_data[1]<=a_data[1]||a_data[1]>300){
+					div=a_data[0];
+				}else{div=p_data[0];}
 				
 				
 				
+				
+				
+				
+				
+//				if (a_data[1]>400) {
+//					div=a_data[0];
+//					return div;
+//				}
+//				if (p_data[1]>350) {
+//					div=p_data[0];
+//				}else if(p_data[1]>a_data[1]){
+//					div=p_data[0];
+//				}else if(p_data[1]=a_data[1]){
+//					if(p_data[2]>a_data[2]){
+//					div=p_data[0];
+//					}else{
+//					div=a_data[0];	
+//					}
+//				}else{div=a_data[0];}
 				
 				AImatix[AImatix.length]=div;
 //				downChess(div,color);
-				return p_data[0];
+				return div;
 //				rule(div,color);
 			}
 			
