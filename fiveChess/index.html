@@ -86,14 +86,18 @@
 				border-radius: 0.2rem;
 				background-image: -webkit-linear-gradient(top,#F3F3F3 0,#FEFEFE 52px);
 			}
-			.chess-data div{
-				margin: 0.5rem 0px;
-				/*float: left;*/
-				/*margin: 1rem;*/
+			.chess-data {
+				
+				/*overflow: hidden;*/
 			}
+			
+			.chess-data div{
+				margin: 0.5rem 0rem;
+			}
+			
 			.qq{
-				/*float: left;*/
-				margin-top: 1rem;
+				/*clear: both;*/
+				margin-top: 0.5rem;
 			}
 			.version p{
 				margin: 0;
@@ -356,7 +360,7 @@
 			</div>
 			<div class="chess-data">
 				<div class="score">
-					<p>胜/负：<span id="score_human">0</span>/<span id="score_ai">0</span></p>
+					胜/负：<span id="score_human">0</span>/<span id="score_ai">0</span>
 				</div>
 				<div class="step">
 					步数：<span id="step_num"></span>	
@@ -677,25 +681,29 @@
 						for (var i=0;i<4;i++) {
 							numx=checkDirson(target,i,color,1);
 							numy=checkDirson(target,7-i,color,1);
-							if ((numx%100===0)&&(numy%100===0)) {
-								if (numx+numy>300) {
+							if ((numx%1000===0)&&(numy%1000===0)) {//两头堵，死
+								if (numx+numy>3000) {
 								dirnum[i]=numx+numy;
 								}else{
 								dirnum[i]=0;	
 								}
-							}else if((numx%100!==0)&&(numy%100!==0)){
-								if (numx+numy>200) {
-									huosan++;
+							}else if((numx%1000!==0)&&(numy%1000!==0)){//两头活，双三，活二
+								if (numx+numy>2000) {
+									huosan++;//活三数目
 									if (huosan>1) {
-										dirnum[i]=360+huosan;
+										dirnum[i]=3100+huosan;//双三3100+小于活三（3504+）大于活二2504-
 										huosan=0;
 										continue;
 									}
 								}
-								dirnum[i]=numx+numy;
-								
-							}else{
-								dirnum[i]=numx-numx%100+numy-numy%100;
+								dirnum[i]=numx+numy+500;//活1(15004-)，2(25004-)，3(35004-)，4(45004-)
+							}else{//一头堵，眠
+								//活1(400-)，2(14000-)，3(24000-)，4(40000-)
+								if (numx+numy<3500) {
+									dirnum[i]=numx-numx%1000+numy-numy%1000-600;
+								}else{
+									dirnum[i]=numx-numx%1000+numy-numy%1000;
+								}
 							}
 						}	
 //						console.log(dirnum,target);
@@ -707,7 +715,7 @@
 						var num=0;
 						if (status==1) {
 							if (div!=undefined&&checkColor(div,color)) {
-								num=num+100;//一个方向有一个相同子权重+100，继续检查这个方向上的下一个
+								num=num+1000;//一个方向有一个相同子权重+100，继续检查这个方向上的下一个
 								num+=checkDirson(div,dir,color,1);	
 							}
 						} 
@@ -740,7 +748,7 @@
 						if (targets[i]!=undefined) {
 							level=levelson(targets[i],uncolor);//周围空位点对应的权重
 							console.log(targets[i],level);
-							if (level[0]>350) {
+							if (level[0]>3800) {
 								divdata[1]=level[0];
 								divdata[2]=level[1];
 								divdata[0]=targets[i];
@@ -772,7 +780,7 @@
 					if (divs[i]!=undefined) {
 						levels[i]=levelson(divs[i],uncolor);//周围空位点对应的权重
 						console.log(divs[i],levels[i]);
-						if (levels[i][0]>350) {
+						if (levels[i][0]>3800) {
 							div=divs[i];
 							return div;
 						}
@@ -797,7 +805,7 @@
 					for (var i=0;i<divs.length;i++) {
 						levels[i]=levelson(divs[i],uncolor);//支线点位对应的权重
 						console.log(divs[i],levels[i]);
-						if (levels[i][0]>350) {
+						if (levels[i][0]>3500) {
 							div=divs[i];
 							return div;
 						}
@@ -825,8 +833,9 @@
 //					console.log(div,counts,count);
 						if (divs[i]!=undefined) {
 							level=levelson(divs[i],uncolor);//周围空位点对应的权重
+							
 //							console.log(divs[i],level);
-							if (level[0]>350) {
+							if (level[0]>3800) {
 								divdata[1]=level[0];
 								divdata[2]=level[1];
 								divdata[0]=divs[i];
@@ -850,7 +859,65 @@
 						if (divs[i]!=undefined) {
 							level=levelson(divs[i],uncolor);//周围空位点对应的权重
 //							console.log(divs[i],level);
-							if (level[0]>350) {
+							if (level[0]>3800) {
+								divdata[1]=level[0];
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+								return divdata;
+							}
+							if (divdata[1]<level[0]) {
+								divdata[1]=level[0];//得出单列权重最大的点位
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+							}else if(divdata[1]==level[0]){//	如果单列权重相等
+								if (divdata[2]<level[1]) {
+									divdata[2]=level[1];//得出周围整体权重最大的点位
+									divdata[0]=divs[i];
+								}
+							}
+						}
+					}
+//				 console.log(divdata);
+				return divdata;
+			}
+			
+			
+			//AI防守，列举可下点->计算每点权重->得出选择点
+			function attackPi (target,uncolor) {
+				var divs=[];//存放所有备选目标点对象
+				var level=[0,0];//存放当前对象权重
+				var divdata=[undefined,0,0];//存放最大权重对象数据
+				divs=canAroundChess(target,"");//周围域选点函数
+					for(var i=0;i<divs.length;i++){
+//					console.log(div,counts,count);
+						if (divs[i]!=undefined) {
+							level=levelson(divs[i],uncolor);//周围空位点对应的权重
+//							console.log(divs[i],level);
+							if (level[0]>3800) {
+								divdata[1]=level[0];
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+								return divdata;
+							}
+							if (divdata[1]<level[0]) {
+								divdata[1]=level[0];//得出单列权重最大的点位
+								divdata[2]=level[1];
+								divdata[0]=divs[i];
+							}else if(divdata[1]==level[0]){//	如果单列权重相等
+								if (divdata[2]<level[1]) {
+									divdata[2]=level[1];//得出周围整体权重最大的点位
+									divdata[0]=divs[i];
+								}
+							}
+						}
+					}
+				divs=[];
+				divs=linesDirTarget(target,uncolor);//支线选点函数
+				 for(var i=0;i<divs.length;i++){
+						if (divs[i]!=undefined) {
+							level=levelson(divs[i],uncolor);//周围空位点对应的权重
+//							console.log(divs[i],level);
+							if (level[0]>3800) {
 								divdata[1]=level[0];
 								divdata[2]=level[1];
 								divdata[0]=divs[i];
@@ -875,9 +942,9 @@
 			//AI进攻，列举可下点->计算每点权重->得出选择点
 			function attack(targets,color) {
 			var divdata=[undefined,0,0];	
-			var 	divs=[];//周围域选点函数
+			var 	divs=[];
 				for (var i=0;i<targets.length;i++) {
-					divs[i]=protectPi(targets[i],color);
+					divs[i]=attackPi(targets[i],color);
 //					console.log(divs[i]);
 				}
 				 for(var i=0;i<divs.length;i++){
@@ -909,9 +976,10 @@
 				console.log(p_data);
 				console.log("这是进攻点");
 				console.log(a_data);
-				if (p_data[1]>400) {
+				if (p_data[1]>4000) {
 					div=p_data[0];
-				}else if(p_data[1]<=a_data[1]||a_data[1]>300){
+				}else if(p_data[1]<=a_data[1]||a_data[1]>3400){
+					//当进攻防守权重相同，或者进攻为活三则进攻
 					div=a_data[0];
 				}else{div=p_data[0];}
 				
@@ -921,11 +989,11 @@
 				
 				
 				
-//				if (a_data[1]>400) {
+//				if (a_data[1]>4000) {
 //					div=a_data[0];
 //					return div;
 //				}
-//				if (p_data[1]>350) {
+//				if (p_data[1]>3500) {
 //					div=p_data[0];
 //				}else if(p_data[1]>a_data[1]){
 //					div=p_data[0];
