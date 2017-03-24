@@ -834,9 +834,10 @@
 //				var count=0;//
 				divs=canAroundChess(target,"");//周围域选点函数
 					for(var i=0;i<divs.length;i++){
-//					console.log(div,counts,count);
+					
 						if (divs[i]!=undefined) {
 							divdata=levelson(divs[i],uncolor);//周围空位点对应的权重
+							console.log(divdata);
 							if (divdata[1]>3800) {
 								return divdata;
 							}
@@ -848,6 +849,7 @@
 				 for(var i=0;i<divs.length;i++){
 						if (divs[i]!=undefined) {
 							divdata=levelson(divs[i],uncolor);//周围空位点对应的权重
+							console.log(divdata);
 							if (divdata[1]>3800) {
 								return divdata;
 							}
@@ -973,9 +975,9 @@
 				a_data=attack(AImatix,color);
 				console.log("这是防守点");
 				console.log(p_data);
-				console.log("这是进攻点");
-				console.log(a_data);
-				if (p_data[1]>4000) {
+//				console.log("这是进攻点");
+//				console.log(a_data);
+				if (p_data[1]>3999) {
 					div=p_data[0];
 				}else if(p_data[1]<=a_data[1]||a_data[1]>3400){
 					//当进攻防守权重相同，或者进攻为活三则进攻
