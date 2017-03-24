@@ -659,16 +659,24 @@
 			}
 			//4个方向为基准返回权重，第一个为单列权重最大值，第二个为所有方向权重总和
 			function levelson(target,color){
+				var uncolor=(color=="white")?"black":"white";
 				var chessDirNum=[];
-				var divdata=[undefined,0,0];
-				var level=[0,0];//第一位放权重最大值，第二位放权重总和
-				chessDirNum=dirsDivnumson(target,color);
+				var unchessDirNum=[];
+				var divdata=[undefined,0,0,0,0];//对象，同色单列最大权重，同色总权重，反色单列最大权重，反色总权重
+				chessDirNum=dirsDivnumson(target,color);//同色的各方向权重数据
+				unchessDirNum=dirsDivnumson(target,uncolor);//反色的各方向权重数据
 //				console.log(chessDirNum);
 				for (var i=0;i<4;i++) {
 					if (divdata[1]<chessDirNum[i]) {
 						divdata[1]=chessDirNum[i];
 					}
 					divdata[2]+=chessDirNum[i];
+				}
+				for (var i=0;i<4;i++) {
+					if (divdata[3]<unchessDirNum[i]) {
+						divdata[3]=unchessDirNum[i];
+					}
+					divdata[4]+=unchessDirNum[i];
 				}
 				divdata[0]=target;
 				return divdata;
@@ -684,7 +692,7 @@
 							numx=checkDirson(target,i,color,1);
 							numy=checkDirson(target,7-i,color,1);
 							if ((numx%1000===0)&&(numy%1000===0)) {//两头堵，死
-								if (numx+numy>3000) {
+								if (numx+numy>3900) {//当两头堵得时候只有为4的时候才有效
 								dirnum[i]=numx+numy;
 								}else{
 								dirnum[i]=0;	
@@ -741,35 +749,8 @@
 							}
 						return num;
 					}	
-			}
-			//对对象数组的每个成员计算权重得出最高的一个，返回一个数组，0位是对象，1位是单列最大权重，2位是总权重
-			function levelmax(targets,color) {
-				var level=[0,0];
-				var divdata=[undefined,0,0];
-					for(var i=0;i<targets.length;i++){
-						if (targets[i]!=undefined) {
-							level=levelson(targets[i],uncolor);//周围空位点对应的权重
-							console.log(targets[i],level);
-							if (level[0]>3800) {
-								divdata[1]=level[0];
-								divdata[2]=level[1];
-								divdata[0]=targets[i];
-								return divdata;
-							}
-							if (divdata[1]<level[0]) {
-								divdata[1]=level[0];//得出单列权重最大的点位
-								divdata[2]=level[1];
-								divdata[0]=targets[i];
-							}else if(divdata[1]==level[0]){//	如果单列权重相等
-								if (divdata[2]<level[1]) {
-									divdata[2]=level[1];//得出周围整体权重最大的点位
-									divdata[0]=targets[i];
-								}
-							}
-						}
-					}
-				return divdata;
-			}
+		}
+			
 			//AI防守，列举可下点->计算每点权重->得出选择点
 			function protectPson (target,uncolor) {
 				var divs=[];//存放所有备选目标点对象
@@ -834,14 +815,13 @@
 //				var count=0;//
 				divs=canAroundChess(target,"");//周围域选点函数
 					for(var i=0;i<divs.length;i++){
-					
 						if (divs[i]!=undefined) {
 							divdata=levelson(divs[i],uncolor);//周围空位点对应的权重
 							console.log(divdata);
 							if (divdata[1]>3800) {
 								return divdata;
 							}
-							mdivdata=comparel(divdata,mdivdata);
+							mdivdata=comparel(divdata,mdivdata);//好的放在最后
 						}
 					}
 				divs=[];
