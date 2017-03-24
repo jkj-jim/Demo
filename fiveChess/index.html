@@ -660,16 +660,18 @@
 			//4个方向为基准返回权重，第一个为单列权重最大值，第二个为所有方向权重总和
 			function levelson(target,color){
 				var chessDirNum=[];
+				var divdata=[undefined,0,0];
 				var level=[0,0];//第一位放权重最大值，第二位放权重总和
 				chessDirNum=dirsDivnumson(target,color);
 //				console.log(chessDirNum);
 				for (var i=0;i<4;i++) {
-					if (level[0]<chessDirNum[i]) {
-						level[0]=chessDirNum[i];
+					if (divdata[1]<chessDirNum[i]) {
+						divdata[1]=chessDirNum[i];
 					}
-					level[1]+=chessDirNum[i];
+					divdata[2]+=chessDirNum[i];
 				}
-				return level;
+				divdata[0]=target;
+				return divdata;
 				//下面为内部函数
 				
 				//改进的查找所有方向相同颜色连续div数目，返回一个装有所有方向有效连续div数目的矩阵
@@ -826,62 +828,59 @@
 			//AI防守，列举可下点->计算每点权重->得出选择点
 			function protectPi (target,uncolor) {
 				var divs=[];//存放所有备选目标点对象
-				var level=[0,0];//存放当前对象权重
-				var divdata=[undefined,0,0];//存放最大权重对象数据
+				var	mdivdata=[undefined,0,0];//存放最大权重对象数据
+				var divdata=[undefined,0,0];//存放当前对象的权重
+//				var divdatas=[];//存放多有备选点对象的权重
+//				var count=0;//
 				divs=canAroundChess(target,"");//周围域选点函数
 					for(var i=0;i<divs.length;i++){
 //					console.log(div,counts,count);
 						if (divs[i]!=undefined) {
-							level=levelson(divs[i],uncolor);//周围空位点对应的权重
-							
-//							console.log(divs[i],level);
-							if (level[0]>3800) {
-								divdata[1]=level[0];
-								divdata[2]=level[1];
-								divdata[0]=divs[i];
+							divdata=levelson(divs[i],uncolor);//周围空位点对应的权重
+							if (divdata[1]>3800) {
 								return divdata;
 							}
-							if (divdata[1]<level[0]) {
-								divdata[1]=level[0];//得出单列权重最大的点位
-								divdata[2]=level[1];
-								divdata[0]=divs[i];
-							}else if(divdata[1]==level[0]){//	如果单列权重相等
-								if (divdata[2]<level[1]) {
-									divdata[2]=level[1];//得出周围整体权重最大的点位
-									divdata[0]=divs[i];
-								}
-							}
+							mdivdata=comparel(divdata,mdivdata);
 						}
 					}
 				divs=[];
 				divs=linesDirTarget(target,uncolor);//支线选点函数
 				 for(var i=0;i<divs.length;i++){
 						if (divs[i]!=undefined) {
-							level=levelson(divs[i],uncolor);//周围空位点对应的权重
-//							console.log(divs[i],level);
-							if (level[0]>3800) {
-								divdata[1]=level[0];
-								divdata[2]=level[1];
-								divdata[0]=divs[i];
+							divdata=levelson(divs[i],uncolor);//周围空位点对应的权重
+							if (divdata[1]>3800) {
 								return divdata;
 							}
-							if (divdata[1]<level[0]) {
-								divdata[1]=level[0];//得出单列权重最大的点位
-								divdata[2]=level[1];
-								divdata[0]=divs[i];
-							}else if(divdata[1]==level[0]){//	如果单列权重相等
-								if (divdata[2]<level[1]) {
-									divdata[2]=level[1];//得出周围整体权重最大的点位
-									divdata[0]=divs[i];
-								}
-							}
+							mdivdata=comparel(divdata,mdivdata);
 						}
 					}
 //				 console.log(divdata);
-				return divdata;
+				return mdivdata;
+				function comparel (arrA,arrB) {//对权重按先后优先级进行比较，返回权重大的
+					var arrC=[];
+					for (var i=1;i<arrA.length;i++) {//从第二位开始，避开第一位的对象
+						arrC[i]=arrA[i]-arrB[i];
+					}
+					for (var i=1;i<arrC.length;i++) {
+						if (arrC[i]>0) {
+							return arrA;
+						}else if (arrC[i]<0) {
+							return arrB;
+						}	
+					}
+					return arrA;
+				}
+				function comparels (arrs) {
+					var arrc=[0,0,0,0];
+					for (var i=0;i<arrs.length;i++) {
+						if (arrs[i][1]>3800) {
+							return arrs[i];
+						}
+						arrc=comparel(arrc,arrs[i]);
+					}
+					return arrc;
+				}
 			}
-			
-			
 			//AI防守，列举可下点->计算每点权重->得出选择点
 			function attackPi (target,uncolor) {
 				var divs=[];//存放所有备选目标点对象
@@ -944,7 +943,7 @@
 			var divdata=[undefined,0,0];	
 			var 	divs=[];
 				for (var i=0;i<targets.length;i++) {
-					divs[i]=attackPi(targets[i],color);
+					divs[i]=protectPi(targets[i],color);
 //					console.log(divs[i]);
 				}
 				 for(var i=0;i<divs.length;i++){
