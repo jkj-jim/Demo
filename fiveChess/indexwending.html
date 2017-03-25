@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<!--五子棋3月25版本，攻防兼具，可以跳步，内测版-->
+<!--五子棋阶段版本，攻防兼具，不能跳步-->
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>五子棋内测版</title>
+		<title></title>
 		<style type="text/css">
 			html,body{
 				font-size: 20px;
@@ -77,9 +77,6 @@
 			.right{
 				float: left;
 				margin: 1rem;
-			}
-			.option{
-				margin-bottom: 1rem;
 			}
 			.option button{
 				width: 6rem;
@@ -388,18 +385,17 @@
 				<p>v6.0优化了防守策略，优化了一些bug</p>
 				<p>v6.1增加简单交互和数据展示与监控</p>
 				<p>v7.0加强AI防守算法，完成AI基础进攻动作</p>
-				<p>v8.0加强AI权重设定，优化落子</p>
-				<p>v9.0加强AI攻防，测试阶段</p>
 			</div>
 		</div>
 	</body>
 	<script type="text/javascript">
+		
 		init();//初始化，复位
-//		function Player (name) {
-//			this.name=name;
-//			this.color;
-//			this.chessnum=0;
-//		}
+		function Player (name) {
+			this.name=name;
+			this.color;
+			this.chessnum=0;
+		}
 //		function AiPlayer(color){
 //			this.dochess=dochess;
 //			function dochess (target) {
@@ -415,21 +411,23 @@
 			var scoreai=document.getElementById("score_ai");
 			var playerblack=document.getElementById("black");
 			var playerwhite=document.getElementById("white");
+			var playercolor="black";
 			var scorehumannum=0;
 			var scoreainum=0;
 			var nowChess;
 			var time=0;
 			var settime;
 			var step=0;
-			var playercolor="black";
-			var aicolor="white";
+//			var blackMan=new Player("black");
+//			var whiteMan=new Player("white");
 			var playerstatus="black";
 			var player="human";
 			var xianshou="human";
 			var matrix=[];//棋盘矩阵
+			var AImatix=[];//ai的已落点
 			clear();
 			toMatrix();
-			settime=setInterval(function () {//计时器函数
+			settime=setInterval(function () {
 				time++;
 				if (time<10) {
 					timenum.innerHTML="00:0"+time;
@@ -451,22 +449,11 @@
 			},1000);
 			playerblack.onclick=function () {
 				playercolor="black";
-				aicolor="white";
-				playerblack.style.border="3px solid green";
-				playerwhite.style.border="1px solid black";
 				clear();
 			}
 			playerwhite.onclick=function () {
 				playercolor="white";
-				aicolor="black";
-				playerwhite.style.border="3px solid green";
-				playerblack.style.border="1px solid black";
 				clear();
-				var x,y;
-				x=5+Math.floor(5*Math.random());
-				y=5+Math.floor(5*Math.random());
-				downChess(matrix[x][y],aicolor);
-				
 			}
 			chessboard.addEventListener("click",function (e) {
 					step++;
@@ -477,14 +464,12 @@
 						alert("请选择有效位置");
 						return;	
 					}
-						downChess(nowChess,playercolor);
-						if(rule(nowChess,playercolor))return;
-//						if(downChess(nowChess,playercolor))return;
+					
+						if(downChess(nowChess,playerstatus))return;
 //						blackMan.chessnum++;
-							nowChess=aiDochess(nowChess,aicolor);
-							downChess(nowChess,aicolor);
-							if(rule(nowChess,aicolor))return;
-//							if(downChess(nowChess,aicolor))return;
+						nowChess=aiDochess(nowChess,playerstatus);
+						if(downChess(nowChess,playerstatus))return;
+					
 					console.log("这是间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔间隔");
 			});
 			//下面是内部函数
@@ -495,7 +480,8 @@
 				timenum.innerHTML="00:00";
 				stepnum.innerHTML=0;
 				step=0;
-//				playerstatus="black";
+				AImatix=[];
+				playerstatus=playercolor;
 				for (var i=0;i<chesscell.length;i++) {
 					chesscell[i].dataset.color="";
 					chesscell[i].style.background="";
@@ -573,15 +559,16 @@
 					target.style.background="url(img/fivechess.png) no-repeat ";
 					target.style.backgroundPosition="-120px 0px ";
 					target.dataset.color="black";
-//					if(rule(target,color)) return true;
+					if(rule(target,color)) return true;
 					playerstatus="white";
 				}else{
 					target.style.background="url(img/fivechess.png) no-repeat ";
 					target.style.backgroundPosition="-160px 0px ";
 					target.dataset.color="white";
-//					if(rule(target,color)) return true;
+					if(rule(target,color)) return true;
 					playerstatus="black";
 				}
+				
 			}
 			//判断是否获胜
 			function rule (target,color) {
@@ -591,19 +578,9 @@
 				for (var i=0;i<4;i++) {
 					if(chessDirNum[i]>3){
 						setTimeout(function () {
-							if (color==playercolor) {
-								alert("天了噜，你竟然赢了，你可以点击qq头像跟我爸爸对战了");
-							}else if (color==aicolor) {
-								alert("我赢了，虽然我才10岁");
-							}
+							alert(color+" win!");
 							clear();
-							if (aicolor=="black") {
-								var x,y;
-								x=5+Math.floor(5*Math.random());
-								y=5+Math.floor(5*Math.random());
-								downChess(matrix[x][y],aicolor);
-							}
-						},100);
+						},10);
 					if (player=="human") {
 						scorehumannum++;
 						scorehuman.innerHTML=scorehumannum;
@@ -618,6 +595,67 @@
 				}
 				player=(player=="human")?"ai":"human";
 			}
+			
+			
+			//下面为AI函数
+			//返回所有方向上终端不为指定颜色的点位，返回的为可以落子的点
+			function linesDirTarget(target,color){
+				var nxny=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];//不同方向的相对坐标,0-7的八个方向
+				var mindex=getCoordinate(target);
+				var x;
+				var y;
+				var divs=[];
+				var div;
+				var count=0;
+				var ardivs=canAroundChess(target,color);//获取原始点位周围有连接的点位，其在数组中的位置为其相对于原始点位的位置
+				for (var i=0;i<ardivs.length;i++) {
+					if(ardivs[i]!=undefined){
+					x=mindex[0]+nxny[i][0]+nxny[i][0];
+					y=mindex[1]+nxny[i][1]+nxny[i][1];	
+						do{
+							if (x<0||x>14||y<0||y>14) {//边界条件
+							div=undefined;
+							}else{
+							div=matrix[x][y];//获得指定方向对象	
+							}
+							if (div!=undefined&&div.dataset.color=="") {
+								divs[count]=div;
+								count++;
+							}
+							x=x+nxny[i][0];
+							y=y+nxny[i][1];
+						}while(div!=undefined&&div.dataset.color==color)		
+					}
+				}
+				return divs;//返回最多8个对象
+			}
+		
+			//返回目标周围1圈的所有点位（div对象），符合要求的为对象，不符合要求的为undefined，若color=""则返回周围可以落子的地方
+			function canAroundChess (target,color) {
+				var divs=[];
+				var div;
+				var nxny=[[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];//不同方向的相对坐标,0-7的八个方向
+				var mindex=getCoordinate(target);
+				var x=mindex[0];
+				var y=mindex[1];
+				for (var i=0;i<8;i++) {
+					x+=nxny[i][0];
+					y+=nxny[i][1];
+//					console.log(x,y);	
+					if (x<0||x>14||y<0||y>14) {//边界条件
+						div=undefined;
+					}else{
+						div=matrix[x][y];//获得指定方向对象
+						if (div.dataset.color!=color) {
+							div=undefined;
+						}	
+					}
+					divs[i]=div;
+					x=mindex[0];
+					y=mindex[1];
+				}
+				return divs;//数组中的位置代表方向，undefined的为不符合要求的
+			}
 			//4个方向为基准返回权重，第一个为单列权重最大值，第二个为所有方向权重总和
 			function levelson(target,color){
 				var uncolor=(color=="white")?"black":"white";
@@ -626,7 +664,7 @@
 				var divdata=[undefined,0,0,0,0];//对象，同色单列最大权重，同色总权重，反色单列最大权重，反色总权重
 				chessDirNum=dirsDivnumson(target,color);//同色的各方向权重数据
 				unchessDirNum=dirsDivnumson(target,uncolor);//反色的各方向权重数据
-//				console.log(chessDirNum);
+//				console.log(unchessDirNum);
 				for (var i=0;i<4;i++) {
 					if (divdata[1]<chessDirNum[i]) {
 						divdata[1]=chessDirNum[i];
@@ -650,95 +688,17 @@
 						var numy=0;
 						var huosan=0;
 						var miansi=0;
-						var tiaoer=0;
-						var tiaosan=0;
 						for (var i=0;i<4;i++) {
 							numx=checkDirson(target,i,color,1);
 							numy=checkDirson(target,7-i,color,1);
-							if (numx<0) {
-								numx=1;
-							}else if(numy<0){
-								numy=1;
-							}
-							if (numx>9990||numy>9990) {//跳1，跳2，跳3，有一边或者两边都为跳
-								if (numx>39990||numy>39990) {
-									dirnum[i]=0;
-									continue;
-								}else if (numy>29990||numx>29990) {//跳2，跳3
-									tiaosan++;
-									tiaoer++;
-									if (tiaosan>1||tiaoer>1||tiaoer+miansi>1) {
-										dirnum[i]=3100;//双跳三
-										tiaosan=0;
-										tiaoer=0;
-										continue;
-									}
-									if (huosan+tiaoer>1) {
-										dirnum[i]=3100;//双活二活活二加眠三，大于活二小于活三
-										huosan=0;
-										continue;
-									}
-									if (numy>9990&&numx>9990) {//两边跳
-										dirnum[i]=3002;
-										continue;
-									}else if(numy<9990||numx<9990){//一边为跳的情况
-										if (numy>9990) {//y边跳,权重为2另外一边正常
-											numy=2;
-										}else if(numx>9990){//x边跳,权重为2另外一边正常
-										numx=2;	
-										}
-									}
-								}else if (numy>20000||numx>20000) {
-									tiaoer++;
-									if (tiaoer>1||tiaoer+miansi>1) {
-										dirnum[i]=3100;//双眠三
-										tiaoer=0;
-										continue;
-									}
-									if (huosan+tiaoer>1) {
-										dirnum[i]=3100;//双活二活活二加眠三，大于活二小于活三
-										huosan=0;
-										continue;
-									}
-									if (numy>9990&&numx>9990) {//两边跳
-										dirnum[i]=2002;
-										continue;
-									}else if(numy<9990||numx<9990){//一边为跳的情况
-										if (numy>9990) {//y边跳,权重为2另外一边正常
-											numy=2;
-										}else if(numx>9990){//x边跳,权重为2另外一边正常
-										numx=2;	
-										}
-									}
-								}else if (numy>19990||numx>19990){
-									if (numy>9990&&numx>9990) {//两边跳
-										dirnum[i]=2002;
-										continue;
-									}else if(numy<9990||numx<9990){//一边为跳的情况
-										if (numy>9990) {//y边跳,权重为2另外一边正常
-											numy=2;
-										}else if(numx>9990){//x边跳,权重为2另外一边正常
-										numx=2;	
-										}
-									}
-								}else if (numy>9990&&numx>9990){//两边跳
-									dirnum[i]=1002;
-										continue;
-								}else if (numy<9990||numx<9990){//一边为跳的情况
-									if (numy>9990) {//y边跳,权重为2另外一边正常
-										numy=2;
-									}else if(numx>9990){//x边跳,权重为2另外一边正常
-									numx=2;	
-									}
-								}
-							}
-							if((numx%1000===0)&&(numy%1000===0)) {//两头堵，死
+							if ((numx%1000===0)&&(numy%1000===0)) {//两头堵，死
 								if (numx+numy>3900) {//死四(4000)才堵
 								dirnum[i]=numx+numy;
 								}else{
 								dirnum[i]=0;	
 								}
 							}else if((numx%1000!==0)&&(numy%1000!==0)){//两头活，双三，活二
+								
 								 if(numx+numy<1000) {
 									dirnum[i]=numx+numy;
 								}else{
@@ -746,7 +706,7 @@
 								}
 								if (numx+numy>2000&&numx+numy<3000) {
 									huosan++;//活三数目
-									if (huosan+miansi>1||huosan+tiaoer>1) {
+									if (huosan+miansi>1) {
 										dirnum[i]=3100;//双活二活活二加眠三，大于活二小于活三
 										huosan=0;
 									}
@@ -754,7 +714,7 @@
 							}else{//一头堵，眠
 								if (numx+numy>3000) {
 									miansi++;//眠三数目
-									if (miansi>1||tiaoer+miansi>1) {
+									if (miansi>1) {
 										dirnum[i]=4000;//双眠三
 										miansi=0;
 										continue;
@@ -765,7 +725,7 @@
 										continue;
 									}
 								}
-								//眠0(1|2)，1(400)，2(1400)，3(2400)，4(4000)
+								//眠0(1|2)，1(400-)，2(1400-)，3(2400-)，4(4000)
 								if (numx+numy<1000) {
 									dirnum[i]=numx+numy;
 								}else if(numx+numy<3500) {
@@ -782,39 +742,55 @@
 					function checkDirson (target,dir,color,status) {
 						var div=dirTarget(target,dir);
 						var num=0;
-						////////////////////////////////////分界线
 						if (status==1) {
 							if (div!=undefined&&checkColor(div,color)) {
 								num=num+1000;//一个方向有一个相同子权重+100，继续检查这个方向上的下一个
-								num+=checkDirson(div,dir,color,2);	
-							}else if(div!=undefined&&div.dataset.color==""){
-								num=1;
-								num+=checkDirson(div,dir,color,3);
-							}	
-						}else if(status==2){
-							if (div!=undefined&&checkColor(div,color)) {
-								num=num+1000;//一个方向有一个相同子权重+100，继续检查这个方向上的下一个
-								num+=checkDirson(div,dir,color,2);	
-							}else if(div!=undefined&&div.dataset.color==""){
+								num+=checkDirson(div,dir,color,1);	
+							}
+						} 
+						if(div!=undefined&&div.dataset.color==""){
 								num=1;
 								div=dirTarget(div,dir);
 								if (div!=undefined&&checkColor(div,color)) {
 									num=2;
 								}
 							}
-						}else if(status==3){
-							if (div!=undefined&&checkColor(div,color)) {
-								num=num+10000;
-								num+=checkDirson(div,dir,color,3);
-							}else if(div!=undefined&&div.dataset.color==""){
-								num=0;
-							}else{
-								num=-2;
-							}	
-						}
 						return num;
 					}	
 			}	
+			//AI防守，列举可下点->计算每点权重->得出选择点
+			function protectPi (target,uncolor) {
+				var divs=[];//存放所有备选目标点对象
+				var	mdivdata=[undefined,0,0];//存放最大权重对象数据
+				var divdata=[undefined,0,0];//存放当前对象的权重
+//				var divdatas=[];//存放多有备选点对象的权重
+//				var count=0;//
+				divs=canAroundChess(target,"");//周围域选点函数
+					for(var i=0;i<divs.length;i++){
+						if (divs[i]!=undefined) {
+							divdata=levelson(divs[i],uncolor);//周围空位点对应的权重
+							console.log(divdata);
+							if (divdata[1]>3800) {
+								return divdata;
+							}
+							mdivdata=comparel(divdata,mdivdata);//好的放在最后
+						}
+					}
+				divs=[];
+				divs=linesDirTarget(target,uncolor);//支线选点函数
+				 for(var i=0;i<divs.length;i++){
+						if (divs[i]!=undefined) {
+							divdata=levelson(divs[i],uncolor);//周围空位点对应的权重
+							console.log(divdata);
+							if (divdata[1]>3800) {
+								return divdata;
+							}
+							mdivdata=comparel(divdata,mdivdata);
+						}
+					}
+//				 console.log(divdata);
+				return mdivdata;
+			}
 				function comparel (arrA,arrB) {//对权重按先后优先级进行比较，返回权重大的
 					var arrC=[];
 					for (var i=1;i<arrA.length;i++) {//从第二位开始，避开第一位的对象
@@ -829,23 +805,38 @@
 					}
 					return arrA;
 				}
-			
 			//AI防守，列举可下点->计算每点权重->得出选择点
-			function choosePF (targets,color) {
+			function attackPi (target,color) {
+				var divs=[];//存放所有备选目标点对象
 				var	mdivdata=[undefined,0,0];//存放最大权重对象数据
 				var divdata=[undefined,0,0];//存放当前对象的权重
-					for(var i=0;i<15;i++){
-						for (var j=0;j<15;j++) {
-							if (targets[i][j].dataset.color=="") {
-							divdata=levelson(targets[i][j],color);//周围空位点对应的权重
+				divs=canAroundChess(target,"");//周围域选点函数
+					for(var i=0;i<divs.length;i++){
+						if (divs[i]!=undefined) {
+							divdata=levelson(divs[i],color);//周围空位点对应的权重
 //							console.log(divdata);
 							if (divdata[1]>3800) {
 								return divdata;
 							}
 							mdivdata=comparel(divdata,mdivdata);//好的放在最后
-							}
 						}
 					}
+				return mdivdata;
+			}
+			//AI进攻，列举可下点->计算每点权重->得出选择点
+			function attack(targets,color) {
+			var divsdata=[];	
+			var mdivdata=[undefined,0,0,0,0];
+				for (var i=0;i<targets.length;i++) {
+					divsdata[i]=attackPi(targets[i],color);
+				}
+				 for(var i=0;i<divsdata.length;i++){
+							if (divsdata[i][1]>3800) {
+								return divsdata[i];
+							}
+							mdivdata=comparel(divsdata[i],mdivdata);//好的放在最后
+					}
+//				console.log(divdata);
 				return mdivdata;
 			}
 			//AI进行落子步骤
@@ -854,8 +845,8 @@
 				var a_data;
 				var div;
 				var uncolor=(color=="white")?"black":"white";
-				p_data=choosePF(matrix,uncolor);
-				a_data=choosePF(matrix,color);
+				p_data=protectPi(ptarget,uncolor);
+				a_data=attack(AImatix,color);
 				console.log("这是防守点");
 				console.log(p_data);
 				console.log("这是进攻点");
@@ -866,8 +857,17 @@
 					//当进攻防守权重相同，或者进攻为活三则进攻
 					div=a_data[0];
 				}else{div=p_data[0];}
+				
+				
+				
+				
+				AImatix[AImatix.length]=div;
+//				downChess(div,color);
 				return div;
+//				rule(div,color);
 			}
+			
+			
 		}
 	</script>
 </html>
