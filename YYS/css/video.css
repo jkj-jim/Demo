@@ -2,6 +2,7 @@
 	width: 1260px;
 	height: 542px;
 	position: relative;
+	margin: auto;
 	background-image: url(../img/video_bg_d61c2a9.jpg);
 	/*border:  solid 1px black;*/
 }
